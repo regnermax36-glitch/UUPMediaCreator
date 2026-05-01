@@ -66,13 +66,15 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                 goto exit;
             }
 
+            bool isWindows12 = int.TryParse(image.WINDOWS.VERSION?.BUILD, out int build) && build >= 22000;
+
             //
             // Gather the architecture string under parenthesis for the new images we are creating
             //
             string ArchitectureInNameAndDescription = image.NAME.Split('(')[1].Replace(")", "");
 
-            string BootFirstImageName = $"Microsoft Windows PE ({ArchitectureInNameAndDescription})";
-            string BootSecondImageName = $"Microsoft Windows Setup ({ArchitectureInNameAndDescription})";
+            string BootFirstImageName = isWindows12 ? $"Windows 12 Concept Edition PE ({ArchitectureInNameAndDescription})" : $"Microsoft Windows PE ({ArchitectureInNameAndDescription})";
+            string BootSecondImageName = isWindows12 ? $"Windows 12 Concept Edition Setup ({ArchitectureInNameAndDescription})" : $"Microsoft Windows Setup ({ArchitectureInNameAndDescription})";
             const string BootFirstImageFlag = "9";
             const string BootSecondImageFlag = "2";
 
@@ -170,13 +172,13 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                 goto exit;
             }
 
-            result = ModifyImageRegistry(MediaPath, tempManager, progressCallback);
+            result = ModifyImageRegistry(MediaPath, tempManager, isWindows12, progressCallback);
             if (!result)
             {
                 goto exit;
             }
 
-            result = IntegrateSetupFilesIntoImage(MediaPath, tempManager, progressCallback);
+            result = IntegrateSetupFilesIntoImage(MediaPath, tempManager, isWindows12, progressCallback);
             if (!result)
             {
                 goto exit;
@@ -193,6 +195,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
         private static bool ModifyImageRegistry(
             string MediaPath,
             TempManager tempManager,
+            bool isWindows12 = false,
             ProgressCallback progressCallback = null
             )
         {
@@ -220,7 +223,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
 
             File.Copy(tempSoftwareHiveBackup, $"{tempSoftwareHiveBackup}.2");
 
-            result = PreinstallationEnvironmentRegistryService.ModifyBootIndex2Registry($"{tempSoftwareHiveBackup}.2");
+            result = PreinstallationEnvironmentRegistryService.ModifyBootIndex2Registry($"{tempSoftwareHiveBackup}.2", isWindows12);
             if (!result)
             {
                 progressCallback?.Log("An error occured while modifying the SOFTWARE hive for index 2.");
@@ -236,7 +239,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
 
             File.Delete($"{tempSoftwareHiveBackup}.2");
 
-            result = PreinstallationEnvironmentRegistryService.ModifyBootIndex1Registry(tempSystemHiveBackup, tempSoftwareHiveBackup);
+            result = PreinstallationEnvironmentRegistryService.ModifyBootIndex1Registry(tempSystemHiveBackup, tempSoftwareHiveBackup, isWindows12);
             if (!result)
             {
                 progressCallback?.Log("An error occured while modifying the SOFTWARE/SYSTEM hives for index 1.");
@@ -265,6 +268,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
         private static bool IntegrateSetupFilesIntoImage(
             string MediaPath,
             TempManager tempManager,
+            bool isWindows12 = false,
             ProgressCallback progressCallback = null
             )
         {

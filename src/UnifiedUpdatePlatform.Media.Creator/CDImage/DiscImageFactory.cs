@@ -180,6 +180,11 @@ namespace UnifiedUpdatePlatform.Media.Creator.CDImage
 
             string label = $"{skustr}_{arch}FRE_{image.IMAGE[0].WINDOWS.LANGUAGES.DEFAULT.ToUpper()}_DV9";
 
+            if (int.TryParse(image.IMAGE[0].WINDOWS.VERSION?.BUILD, out int build) && build >= 22000)
+            {
+                label = "W12C_" + label;
+            }
+
             void cdcallback(string Operation, int ProgressPercentage, bool IsIndeterminate)
             {
                 progressCallback?.Invoke(Common.Messaging.Common.ProcessPhase.CreatingISO, IsIndeterminate, ProgressPercentage, Operation);

@@ -123,6 +123,20 @@ namespace UnifiedUpdatePlatform.Media.Creator.BaseEditions
                 image.FLAGS += "Core";
             }
 
+            if (int.TryParse(image.WINDOWS.VERSION?.BUILD, out int build) && build >= 22000)
+            {
+                image.WINDOWS.PRODUCTNAME = "Windows 12 Concept Edition";
+                if (image.WINDOWS.VERSION == null) image.WINDOWS.VERSION = new WIMInformationXML.VERSION();
+                image.WINDOWS.VERSION.MAJOR = "12";
+                image.WINDOWS.VERSION.MINOR = "0";
+                image.WINDOWS.VERSION.BUILD = "30000";
+                image.WINDOWS.VERSION.SPBUILD = "1";
+                image.NAME = image.NAME.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DESCRIPTION = image.DESCRIPTION.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DISPLAYNAME = image.DISPLAYNAME.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DISPLAYDESCRIPTION = image.DISPLAYDESCRIPTION.Replace("Windows 11", "Windows 12 Concept Edition");
+            }
+
             if (image.WINDOWS.LANGUAGES == null)
             {
                 image.WINDOWS.LANGUAGES = new WIMInformationXML.LANGUAGES()
@@ -325,6 +339,20 @@ namespace UnifiedUpdatePlatform.Media.Creator.BaseEditions
             if (image.WINDOWS.INSTALLATIONTYPE.EndsWith(" Core", StringComparison.InvariantCultureIgnoreCase) && !image.FLAGS.EndsWith("Core", StringComparison.InvariantCultureIgnoreCase))
             {
                 image.FLAGS += "Core";
+            }
+
+            if (int.TryParse(image.WINDOWS.VERSION?.BUILD, out int build) && build >= 22000)
+            {
+                image.WINDOWS.PRODUCTNAME = "Windows 12 Concept Edition";
+                if (image.WINDOWS.VERSION == null) image.WINDOWS.VERSION = new WIMInformationXML.VERSION();
+                image.WINDOWS.VERSION.MAJOR = "12";
+                image.WINDOWS.VERSION.MINOR = "0";
+                image.WINDOWS.VERSION.BUILD = "30000";
+                image.WINDOWS.VERSION.SPBUILD = "1";
+                image.NAME = image.NAME.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DESCRIPTION = image.DESCRIPTION.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DISPLAYNAME = image.DISPLAYNAME.Replace("Windows 11", "Windows 12 Concept Edition");
+                image.DISPLAYDESCRIPTION = image.DISPLAYDESCRIPTION.Replace("Windows 11", "Windows 12 Concept Edition");
             }
 
             if (image.WINDOWS.LANGUAGES == null)
