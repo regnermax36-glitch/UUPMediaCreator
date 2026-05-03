@@ -251,6 +251,14 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                         RegistryKey oemkey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OEMInformation");
                         oemkey.SetValue("Manufacturer", "Windows 12 Concept Edition Recoder", RegistryValueType.String);
                         oemkey.SetValue("Model", "Massive Redesign Edition", RegistryValueType.String);
+
+                        cvkey.SetValue("RegisteredOwner", "Windows 12 Concept User", RegistryValueType.String);
+                        cvkey.SetValue("RegisteredOrganization", "Windows 12 Concept Edition", RegistryValueType.String);
+
+                        RegistryKey oobekey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OOBE");
+                        oobekey.SetValue("PrivacyUserExperienceEnabled", 0, RegistryValueType.Dword);
+                        oobekey.SetValue("SkipMachineOOBE", 1, RegistryValueType.Dword);
+                        oobekey.SetValue("SkipUserOOBE", 1, RegistryValueType.Dword);
                     }
                 }
             }
@@ -288,6 +296,14 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                     RegistryKey oemkey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OEMInformation");
                     oemkey.SetValue("Manufacturer", "Windows 12 Concept Edition Recoder", RegistryValueType.String);
                     oemkey.SetValue("Model", "Massive Redesign Edition", RegistryValueType.String);
+
+                    cvkey.SetValue("RegisteredOwner", "Windows 12 Concept User", RegistryValueType.String);
+                    cvkey.SetValue("RegisteredOrganization", "Windows 12 Concept Edition", RegistryValueType.String);
+
+                    RegistryKey oobekey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OOBE");
+                    oobekey.SetValue("PrivacyUserExperienceEnabled", 0, RegistryValueType.Dword);
+                    oobekey.SetValue("SkipMachineOOBE", 1, RegistryValueType.Dword);
+                    oobekey.SetValue("SkipUserOOBE", 1, RegistryValueType.Dword);
                 }
 
                 if (PlatformUtilities.OperatingSystem == OSPlatform.Windows)
