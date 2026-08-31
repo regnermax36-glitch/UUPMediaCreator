@@ -28,7 +28,7 @@ namespace UUPMediaConverter
     {
         private static void PrintLogo()
         {
-            Logging.Log($"UUPMediaConverter {Assembly.GetExecutingAssembly().GetName().Version} - Converts an UUP file set to an usable ISO file");
+            Logging.Log($"UUPMediaConverter {Assembly.GetExecutingAssembly().GetName().Version} (Windows 12 Concept Edition Redesign) - Converts an UUP file set to an usable ISO file");
             Logging.Log("Copyright (c) Gustave Monce and Contributors");
             Logging.Log("https://github.com/gus33000/UUPMediaCreator");
             Logging.Log("");

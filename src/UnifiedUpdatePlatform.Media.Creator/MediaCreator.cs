@@ -426,6 +426,44 @@ namespace UnifiedUpdatePlatform.Media.Creator
                     goto error;
                 }
 
+                CompDB neutralCompDB = CompositionDatabases.GetNeutralCompDB();
+                if (int.TryParse(neutralCompDB?.TargetBuildInfo?.Split('.')[2], out int buildNum) && buildNum >= 22000)
+                {
+                    progressCallback?.Invoke(Common.Messaging.Common.ProcessPhase.ReadingMetadata, true, 0, "Applying OOBE Redesign");
+                    string arch = neutralCompDB.BuildArch;
+                    if (arch == "amd64") arch = "amd64";
+                    else if (arch == "x86") arch = "x86";
+                    else if (arch == "arm64") arch = "wow64"; // Usually it uses amd64 or wow64 for some reason in unattend
+
+                    string autounattend = $@"<?xml version=""1.0"" encoding=""utf-8""?>
+<unattend xmlns=""urn:schemas-microsoft-com:unattend"">
+    <settings pass=""specialize"">
+        <component name=""Microsoft-Windows-Shell-Setup"" processorArchitecture=""{arch}"" publicKeyToken=""31bf3856ad364e35"" language=""neutral"" versionScope=""nonSxS"">
+            <OEMInformation>
+                <Manufacturer>Windows 12 Concept Edition Recoder</Manufacturer>
+                <Model>Massive Redesign Edition</Model>
+            </OEMInformation>
+            <RegisteredOwner>Windows 12 Concept User</RegisteredOwner>
+            <RegisteredOrganization>Windows 12 Concept Edition</RegisteredOrganization>
+        </component>
+    </settings>
+    <settings pass=""oobeSystem"">
+        <component name=""Microsoft-Windows-Shell-Setup"" processorArchitecture=""{arch}"" publicKeyToken=""31bf3856ad364e35"" language=""neutral"" versionScope=""nonSxS"">
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideLocalAccountScreen>false</HideLocalAccountScreen>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>false</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>false</HideWirelessSetupInOOBE>
+                <NetworkLocation>Home</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>
+</unattend>";
+                    File.WriteAllText(Path.Combine(MediaRootPath, "autounattend.xml"), autounattend);
+                }
+
                 //
                 // Build Install.WIM/ESD
                 //

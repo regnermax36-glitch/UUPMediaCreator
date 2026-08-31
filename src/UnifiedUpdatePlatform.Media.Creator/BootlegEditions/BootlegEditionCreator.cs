@@ -645,7 +645,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.BootlegEditions
                 progressCallback?.Invoke(Common.Messaging.Common.ProcessPhase.CapturingImage, IsIndeterminate, ProgressPercentage, Operation);
             }
 
-            string name = $"Windows 10 {EditionID}";
+            string name = $"Windows 12 Concept Edition {EditionID}";
             if (IniReader.FriendlyEditionNames.Any(x => x.Key.Equals(EditionID, StringComparison.InvariantCultureIgnoreCase)))
             {
                 name = IniReader.FriendlyEditionNames.First(x => x.Key.Equals(EditionID, StringComparison.InvariantCultureIgnoreCase)).Value;
@@ -680,6 +680,18 @@ namespace UnifiedUpdatePlatform.Media.Creator.BootlegEditions
             tmpImageInfo.WINDOWS = srcimage.WINDOWS;
             tmpImageInfo.WINDOWS.EDITIONID = sku;
             tmpImageInfo.FLAGS = sku;
+
+            if (int.TryParse(tmpImageInfo.WINDOWS.VERSION?.BUILD, out int build) && build >= 22000)
+            {
+                tmpImageInfo.WINDOWS.PRODUCTNAME = "Windows 12 Concept Edition";
+                if (tmpImageInfo.WINDOWS.VERSION == null) tmpImageInfo.WINDOWS.VERSION = new WIMInformationXML.VERSION();
+                tmpImageInfo.WINDOWS.VERSION.MAJOR = "12";
+                tmpImageInfo.WINDOWS.VERSION.MINOR = "0";
+                tmpImageInfo.WINDOWS.VERSION.BUILD = "30000";
+                tmpImageInfo.WINDOWS.VERSION.SPBUILD = "1";
+                name = name.Replace("Windows 11", "Windows 12 Concept Edition");
+            }
+
             tmpImageInfo.NAME = name;
             tmpImageInfo.DESCRIPTION = name;
             tmpImageInfo.DISPLAYNAME = name;

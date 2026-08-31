@@ -129,7 +129,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
             return true;
         }
 
-        internal static bool ModifyBootIndex1Registry(string systemHivePath, string softwareHivePath)
+        internal static bool ModifyBootIndex1Registry(string systemHivePath, string softwareHivePath, bool isWindows12 = false)
         {
             try
             {
@@ -236,6 +236,30 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                             ResetWindowsRootInValue(key1, subval);
                         }
                     }
+
+                    if (isWindows12)
+                    {
+                        RegistryKey cvkey = hive.Root.OpenSubKey(@"Microsoft\Windows NT\CurrentVersion");
+                        cvkey.SetValue("ProductName", "Windows 12 Concept Edition", RegistryValueType.String);
+                        cvkey.SetValue("DisplayVersion", "Concept", RegistryValueType.String);
+                        cvkey.SetValue("EditionID", "Concept", RegistryValueType.String);
+                        cvkey.SetValue("CurrentMajorVersionNumber", 12, RegistryValueType.Dword);
+                        cvkey.SetValue("CurrentVersion", "12.0", RegistryValueType.String);
+                        cvkey.SetValue("CurrentBuild", "30000", RegistryValueType.String);
+                        cvkey.SetValue("CurrentBuildNumber", "30000", RegistryValueType.String);
+
+                        RegistryKey oemkey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OEMInformation");
+                        oemkey.SetValue("Manufacturer", "Windows 12 Concept Edition Recoder", RegistryValueType.String);
+                        oemkey.SetValue("Model", "Massive Redesign Edition", RegistryValueType.String);
+
+                        cvkey.SetValue("RegisteredOwner", "Windows 12 Concept User", RegistryValueType.String);
+                        cvkey.SetValue("RegisteredOrganization", "Windows 12 Concept Edition", RegistryValueType.String);
+
+                        RegistryKey oobekey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OOBE");
+                        oobekey.SetValue("PrivacyUserExperienceEnabled", 0, RegistryValueType.Dword);
+                        oobekey.SetValue("SkipMachineOOBE", 1, RegistryValueType.Dword);
+                        oobekey.SetValue("SkipUserOOBE", 1, RegistryValueType.Dword);
+                    }
                 }
             }
             catch
@@ -245,7 +269,7 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
             return true;
         }
 
-        internal static bool ModifyBootIndex2Registry(string softwareHivePath)
+        internal static bool ModifyBootIndex2Registry(string softwareHivePath, bool isWindows12 = false)
         {
             try
             {
@@ -257,6 +281,31 @@ namespace UnifiedUpdatePlatform.Media.Creator.Installer
                     ), DiscUtils.Streams.Ownership.Dispose);
                 RegistryKey winpekey = hive.Root.OpenSubKey(@"Microsoft\Windows NT\CurrentVersion\WinPE");
                 winpekey.SetValue("CustomBackground", @"%SystemRoot%\system32\setup.bmp", RegistryValueType.ExpandString);
+
+                if (isWindows12)
+                {
+                    RegistryKey cvkey = hive.Root.OpenSubKey(@"Microsoft\Windows NT\CurrentVersion");
+                    cvkey.SetValue("ProductName", "Windows 12 Concept Edition", RegistryValueType.String);
+                    cvkey.SetValue("DisplayVersion", "Concept", RegistryValueType.String);
+                    cvkey.SetValue("EditionID", "Concept", RegistryValueType.String);
+                    cvkey.SetValue("CurrentMajorVersionNumber", 12, RegistryValueType.Dword);
+                    cvkey.SetValue("CurrentVersion", "12.0", RegistryValueType.String);
+                    cvkey.SetValue("CurrentBuild", "30000", RegistryValueType.String);
+                    cvkey.SetValue("CurrentBuildNumber", "30000", RegistryValueType.String);
+
+                    RegistryKey oemkey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OEMInformation");
+                    oemkey.SetValue("Manufacturer", "Windows 12 Concept Edition Recoder", RegistryValueType.String);
+                    oemkey.SetValue("Model", "Massive Redesign Edition", RegistryValueType.String);
+
+                    cvkey.SetValue("RegisteredOwner", "Windows 12 Concept User", RegistryValueType.String);
+                    cvkey.SetValue("RegisteredOrganization", "Windows 12 Concept Edition", RegistryValueType.String);
+
+                    RegistryKey oobekey = hive.Root.CreateSubKey(@"Microsoft\Windows\CurrentVersion\OOBE");
+                    oobekey.SetValue("PrivacyUserExperienceEnabled", 0, RegistryValueType.Dword);
+                    oobekey.SetValue("SkipMachineOOBE", 1, RegistryValueType.Dword);
+                    oobekey.SetValue("SkipUserOOBE", 1, RegistryValueType.Dword);
+                }
+
                 if (PlatformUtilities.OperatingSystem == OSPlatform.Windows)
                 {
                     RegistryKey ockey = winpekey.OpenSubKey("OC");

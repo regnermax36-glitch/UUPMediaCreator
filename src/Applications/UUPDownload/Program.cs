@@ -31,7 +31,7 @@ namespace UUPDownload
     {
         private static void PrintLogo()
         {
-            Logging.Log($"UnifiedUpdatePlatform.Media.Download {Assembly.GetExecutingAssembly().GetName().Version} - Download from the Microsoft Unified Update Platform");
+            Logging.Log($"UnifiedUpdatePlatform.Media.Download {Assembly.GetExecutingAssembly().GetName().Version} (Windows 12 Concept Edition Redesign) - Download from the Microsoft Unified Update Platform");
             Logging.Log("Copyright (c) Gustave Monce and Contributors");
             Logging.Log("https://github.com/gus33000/UUPMediaCreator");
             Logging.Log("");
